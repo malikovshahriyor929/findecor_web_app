@@ -1,0 +1,11 @@
+eval "$(ssh-agent -s)" &&
+ssh-add ~/.ssh/id_rsa_gitlab &&
+git stash &&
+git pull origin main &&
+export PATH=$PATH:/root/.nvm/versions/node/v18.18.0/bin &&
+source /root/.nvm/nvm.sh &&
+nvm use 18.18.0 &&
+npm install && 
+npm run build &&
+pm2 restart findecor_chatbot
+ 

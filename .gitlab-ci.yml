@@ -1,0 +1,13 @@
+deploy-prod:
+  stage: deploy
+  before_script:
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" > ~/.ssh/gitlab_id_rsa
+    - chmod 400 ~/.ssh/gitlab_id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/gitlab_id_rsa $PROD_SERVER_USER@$PROD_SERVER_IP "
+      cd $FINDECOR_FRONT_PROJECT_PATH &&
+      ls       &&
+      bash deploy-prod" 
+  only:   
+    - main 
