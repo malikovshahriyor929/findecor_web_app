@@ -149,7 +149,7 @@ const LoginComponents = () => {
     tg.ready(); // initialize the Telegram Mini App
 
     const user = tg.initDataUnsafe?.user;
-    console.log("Telegram User:", user);
+    alert("Telegram User:" + " " + JSON.stringify(user));
 
     if (user) {
       setTelegramUser(user);
@@ -163,6 +163,7 @@ const LoginComponents = () => {
         {telegramUser && (
           <pre>
             {JSON.stringify(telegramUser, null, 4)}
+            : Telegram data
           </pre>
         )}
         <div className="space-y-1">
