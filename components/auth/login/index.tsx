@@ -158,7 +158,7 @@ const LoginComponents = () => {
     } else {
       console.error("Telegram WebApp mavjud emas.");
     }
-  }, [window]);
+  }, [window.Telegram]);
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#fffef8] ">
