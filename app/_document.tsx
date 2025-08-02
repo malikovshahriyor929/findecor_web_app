@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <script src="https://telegram.org/js/telegram-web-app.js" />
+        <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
       </Head>
       <body>
         <Main />       {/* Bu yerga barcha sahifa content kelyapti */}
