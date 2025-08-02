@@ -14,6 +14,10 @@ export default function Document() {
           data-onauth="onTelegramAuth(user)"
           data-request-access="write"
         />
+      </Head>
+      <body>
+        <Main />       {/* Bu yerga barcha sahifa content kelyapti */}
+        <NextScript /> {/* Next.js JavaScript kody */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -23,10 +27,6 @@ export default function Document() {
             `,
           }}
         />
-      </Head>
-      <body>
-        <Main />       {/* Bu yerga barcha sahifa content kelyapti */}
-        <NextScript /> {/* Next.js JavaScript kody */}
       </body>
     </Html>
   )
