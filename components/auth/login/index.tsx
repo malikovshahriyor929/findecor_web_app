@@ -143,18 +143,22 @@ const LoginComponents = () => {
   const [user, setUser] = useState<TelegramUser | null>(null);
 
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    tg?.ready();
+    if (typeof window !== "undefined" && window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
 
-    console.log("Telegram object:", tg);
+      const user = tg.initDataUnsafe?.user;
 
-    const telegramUser = tg?.initDataUnsafe?.user;
-    console.log("Telegram User:", telegramUser);
-
-    if (telegramUser) {
-      setUser(telegramUser);
+      if (user) {
+        setUser(user);
+        console.log("Telegram foydalanuvchi:", user);
+      } else {
+        console.warn("Foydalanuvchi topilmadi.");
+      }
+    } else {
+      console.error("Telegram WebApp mavjud emas.");
     }
-  }, []);
+  }, [window]);
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#fffef8] ">
