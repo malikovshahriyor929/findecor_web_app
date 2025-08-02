@@ -15,12 +15,49 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { GoogleLogo } from "@/shared/assets/icons/google-logo";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useLoginMutation } from "@/request/mutation";
 import { Myaxios } from "@/request";
 import { isAxiosError } from "axios";
 import Cookies from "js-cookie";
+
+declare global {
+  interface Window {
+    Telegram: {
+      WebApp: {
+        initData: string;
+        initDataUnsafe: {
+          query_id?: string;
+          user?: {
+            id: number;
+            first_name: string;
+            last_name?: string;
+            username?: string;
+            language_code?: string;
+            is_premium?: boolean;
+            photo_url?: string;
+          };
+          auth_date?: string;
+          hash?: string;
+        };
+        ready: () => void;
+        close: () => void;
+        sendData: (data: string) => void;
+        expand: () => void;
+        isExpanded: boolean;
+        themeParams: {
+          bg_color?: string;
+          text_color?: string;
+          hint_color?: string;
+          link_color?: string;
+          button_color?: string;
+          button_text_color?: string;
+        };
+      };
+    };
+  }
+}
 const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
@@ -33,6 +70,16 @@ const formSchema = z.object({
     })
     .regex(/\d/, { message: "Password must contain at least one number." }),
 });
+
+interface TelegramUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+  is_premium?: boolean;
+  photo_url?: string;
+}
 const LoginComponents = () => {
   const router = useRouter();
   const { mutate, isPending } = useLoginMutation();
@@ -69,9 +116,6 @@ const LoginComponents = () => {
       password: "",
     },
   });
-  form.handleSubmit
-
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     mutate(values, {
       onSuccess() {
@@ -95,9 +139,32 @@ const LoginComponents = () => {
       },
     });
   }
+
+  const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
+
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) return;
+
+    tg.ready(); // initialize the Telegram Mini App
+
+    const user = tg.initDataUnsafe?.user;
+    console.log("Telegram User:", user);
+
+    if (user) {
+      setTelegramUser(user);
+      // Optionally send user info to your backend
+    }
+  }, []);
+
   return (
     <div className="flex items-center justify-center h-screen bg-[#fffef8] ">
       <div className="max-w-[400px] mx-auto w-[90%] bg-white shadow-lg  border border-[#e5e7eb] px-6 pt-4 rounded-lg">
+        {telegramUser && (
+          <pre>
+            {JSON.stringify(telegramUser, null, 4)}
+          </pre>
+        )}
         <div className="space-y-1">
           <h1 className="font-semibold tracking-tight text-center text-2xl">
             Sign In
