@@ -140,31 +140,29 @@ const LoginComponents = () => {
     });
   }
 
-  const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
+  const [user, setUser] = useState<TelegramUser | null>(null);
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
-    // if (!tg) return;
+    tg?.ready();
 
-    tg?.ready(); // initialize the Telegram Mini App
+    console.log("Telegram object:", tg);
 
-    const user = tg?.initDataUnsafe?.user;
-    alert("Telegram User:" + " " + JSON.stringify(user));
-    console.log(tg);
+    const telegramUser = tg?.initDataUnsafe?.user;
+    console.log("Telegram User:", telegramUser);
 
-    if (user) {
-      setTelegramUser(user);
-      // Optionally send user info to your backend
+    if (telegramUser) {
+      setUser(telegramUser);
     }
   }, []);
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#fffef8] ">
       <div className="max-w-[400px] mx-auto w-[90%] bg-white shadow-lg  border border-[#e5e7eb] px-6 pt-4 rounded-lg">
-        {telegramUser && (
-          <pre>
-            {JSON.stringify(telegramUser, null, 4)}
-          </pre>
+        {user ? (
+          <pre>{JSON.stringify(user, null, 2)}</pre>
+        ) : (
+          <p>User not found. Are you inside Telegram?</p>
         )}
         : Telegram data
         <div className="space-y-1">
