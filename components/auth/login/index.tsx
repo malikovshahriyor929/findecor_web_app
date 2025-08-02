@@ -144,12 +144,13 @@ const LoginComponents = () => {
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
-    if (!tg) return;
+    // if (!tg) return;
 
-    tg.ready(); // initialize the Telegram Mini App
+    tg?.ready(); // initialize the Telegram Mini App
 
-    const user = tg.initDataUnsafe?.user;
+    const user = tg?.initDataUnsafe?.user;
     alert("Telegram User:" + " " + JSON.stringify(user));
+    console.log(tg);
 
     if (user) {
       setTelegramUser(user);
@@ -163,9 +164,9 @@ const LoginComponents = () => {
         {telegramUser && (
           <pre>
             {JSON.stringify(telegramUser, null, 4)}
-            : Telegram data
           </pre>
         )}
+        : Telegram data
         <div className="space-y-1">
           <h1 className="font-semibold tracking-tight text-center text-2xl">
             Sign In
