@@ -70,16 +70,28 @@ const formSchema = z.object({
     })
     .regex(/\d/, { message: "Password must contain at least one number." }),
 });
-
-interface TelegramUser {
+interface TelegramWebAppUser {
   id: number;
   first_name: string;
   last_name?: string;
   username?: string;
   language_code?: string;
   is_premium?: boolean;
+  allows_write_to_pm?: boolean;
   photo_url?: string;
 }
+
+interface TelegramInitDataUnsafe {
+  query_id?: string;
+  user?: TelegramWebAppUser;
+  auth_date?: number;
+  hash?: string;
+  receiver?: {
+    id: number;
+    type: string;
+  };
+}
+
 const LoginComponents = () => {
   const router = useRouter();
   const { mutate, isPending } = useLoginMutation();
@@ -140,18 +152,23 @@ const LoginComponents = () => {
     });
   }
 
-  const [user, setUser] = useState<TelegramUser | null>(null);
+  const [user, setUser] = useState<TelegramInitDataUnsafe | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.Telegram?.WebApp) {
       const tg = window.Telegram.WebApp;
       tg.ready();
-
-      const user = tg.initDataUnsafe?.user;
-
-      if (user) {
-        setUser(user);
-        console.log("Telegram foydalanuvchi:", user);
+      const rawUser = tg.initDataUnsafe;
+      if (rawUser) {
+        // Convert auth_date to number if present and is a string
+        const fixedUser: TelegramInitDataUnsafe = {
+          ...rawUser,
+          auth_date: rawUser.auth_date
+            ? Number(rawUser.auth_date)
+            : undefined,
+        };
+        setUser(fixedUser);
+        console.log("Telegram foydalanuvchi:", fixedUser);
       } else {
         console.warn("Foydalanuvchi topilmadi.");
       }
@@ -163,11 +180,11 @@ const LoginComponents = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-[#fffef8] ">
       <div className="max-w-[400px] mx-auto w-[90%] bg-white shadow-lg  border border-[#e5e7eb] px-6 pt-4 rounded-lg">
-        {user ? (
-          <pre>{JSON.stringify(user, null, 2)}</pre>
+        { user ? (
+          <pre>{ JSON.stringify(user, null, 2) }</pre>
         ) : (
           <p>User not found. Are you inside Telegram?</p>
-        )}
+        ) }
         : Telegram data
         <div className="space-y-1">
           <h1 className="font-semibold tracking-tight text-center text-2xl">
@@ -178,12 +195,12 @@ const LoginComponents = () => {
           </p>
         </div>
         <div className=" mx-auto py-5">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <Form { ...form }>
+            <form onSubmit={ form.handleSubmit(onSubmit) } className="space-y-5">
               <FormField
-                control={form.control}
+                control={ form.control }
                 name="email"
-                render={({ field }) => (
+                render={ ({ field }) => (
                   <FormItem>
                     <FormControl>
                       <div className="grid gap-2">
@@ -194,18 +211,18 @@ const LoginComponents = () => {
                           id="email"
                           type="email"
                           placeholder="name@example.com"
-                          {...field}
+                          { ...field }
                         />
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                )}
+                ) }
               />
               <FormField
-                control={form.control}
+                control={ form.control }
                 name="password"
-                render={({ field }) => (
+                render={ ({ field }) => (
                   <FormItem>
                     <FormControl>
                       <div className="grid gap-2">
@@ -222,27 +239,27 @@ const LoginComponents = () => {
                           type="password"
                           id="password"
                           placeholder="••••••••"
-                          {...field}
+                          { ...field }
                         />
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                )}
+                ) }
               />
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={ isPending }
                 className="w-full bg-[#ea430a] hover:bg-[#ea430a]/85 "
               >
-                {isPending ? (
+                { isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Signing in...
                   </>
                 ) : (
                   "Sign in"
-                )}
+                ) }
               </Button>
             </form>
           </Form>
@@ -253,7 +270,7 @@ const LoginComponents = () => {
           </div>
 
           <Button
-            onClick={handleGoogleSignUp}
+            onClick={ handleGoogleSignUp }
             variant="outline"
             className="mt-4 w-full"
           >
@@ -262,7 +279,7 @@ const LoginComponents = () => {
           </Button>
 
           <p className="text-sm text-gray-600 text-center mt-5 space-x-1">
-            <span>Don{"'"}t have an account?</span>
+            <span>Don{ "'" }t have an account?</span>
             <Link
               href="/register"
               className="font-medium text-blue-600 hover:text-blue-500"
