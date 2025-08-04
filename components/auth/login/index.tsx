@@ -161,30 +161,30 @@ const LoginComponents = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.Telegram?.WebApp) {
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready();
-        const actualInitDataFromTelegram = window.Telegram.WebApp.initData;
+      // if (window.Telegram && window.Telegram.WebApp) {
+      //   window.Telegram.WebApp.ready();
+      //   const actualInitDataFromTelegram = window.Telegram.WebApp.initData;
 
-        // Bu `actualInitDataFromTelegram` stringini backend'ingizga yuboring
-        // Masalan, fetch/axios yordamida POST so'rovi orqali
-        fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/verify-data`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ initData: actualInitDataFromTelegram })
-        })
-          .then(response => response.json())
-          .then(data => {
-            alert('Backend javobi: ' + JSON.stringify(data));
-            if (data.success) {
-              console.log("Hash muvaffaqiyatli tasdiqlandi!");
-            } else {
-              console.error("Hash tasdiqlanmadi!");
-            }
-          })
-          .catch(error => console.error("Xato yuz berdi:", error));
-      }
+      //   // Bu `actualInitDataFromTelegram` stringini backend'ingizga yuboring
+      //   // Masalan, fetch/axios yordamida POST so'rovi orqali
+      //   fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/verify-data`, {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     body: JSON.stringify({ initData: actualInitDataFromTelegram })
+      //   })
+      //     .then(response => response.json())
+      //     .then(data => {
+      //       alert('Backend javobi: ' + JSON.stringify(data));
+      //       if (data.success) {
+      //         console.log("Hash muvaffaqiyatli tasdiqlandi!");
+      //       } else {
+      //         console.error("Hash tasdiqlanmadi!");
+      //       }
+      //     })
+      //     .catch(error => console.error("Xato yuz berdi:", error));
+      // }
       const tg = window.Telegram.WebApp;
       tg.ready();
       const rawUser = tg.initDataUnsafe;
@@ -214,7 +214,6 @@ const LoginComponents = () => {
         ) : (
           <p>User not found. Are you inside Telegram?</p>
         ) }
-        : Telegram data
         <div className="space-y-1">
           <h1 className="font-semibold tracking-tight text-center text-2xl">
             Sign In
