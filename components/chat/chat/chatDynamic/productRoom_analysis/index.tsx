@@ -1,11 +1,6 @@
 // "use client";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+
 import { detectedTy, ProductType } from "@/types";
 import { useEffect, useState } from "react";
 import { MdArrowOutward } from "react-icons/md";

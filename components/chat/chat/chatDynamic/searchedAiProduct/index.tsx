@@ -1,11 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+
 import { ChatMessageType, ProductType } from "@/types";
 import React, { useEffect, useState } from "react";
 import { MdArrowOutward } from "react-icons/md";
