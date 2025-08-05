@@ -158,6 +158,7 @@ const LoginComponents = () => {
 
 
   const [user, setUser] = useState<TelegramInitDataUnsafe | null>(null);
+  const [init, setinit] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.Telegram?.WebApp) {
@@ -188,6 +189,8 @@ const LoginComponents = () => {
       const tg = window.Telegram.WebApp;
       tg.ready();
       const rawUser = tg.initDataUnsafe;
+
+      setinit(tg.initData)
       if (rawUser) {
         // Convert auth_date to number if present and is a string
         const fixedUser: TelegramInitDataUnsafe = {
@@ -210,7 +213,7 @@ const LoginComponents = () => {
     <div className="flex items-center justify-center h-screen bg-[#fffef8] ">
       <div className="max-w-[400px] mx-auto w-[90%] bg-white shadow-lg  border border-[#e5e7eb] px-6 pt-4 rounded-lg">
         { user ? (
-          <pre>{ JSON.stringify(user, null, 2) }</pre>
+          <pre>{ JSON.stringify(init, null, 2) }</pre>
         ) : (
           <p>User not found. Are you inside Telegram?</p>
         ) }
