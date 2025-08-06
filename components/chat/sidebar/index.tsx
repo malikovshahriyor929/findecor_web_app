@@ -6,7 +6,7 @@ import { RootState } from "@/store";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import {  useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Menubar,
   MenubarContent,
@@ -28,16 +28,51 @@ import Cookies from "js-cookie";
 import { setMessage } from "@/store/chatmessageSlice";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
+// type Company = {
+//   id: number;
+//   name: string;
+//   description: string;
+//   avatar: string;
+// };
 
+// type ChatData = {
+//   id: number;
+//   appId: string;
+//   url: string;
+//   selectedColor: string;
+//   icon: string;
+//   chatName: string;
+//   type: string; // agar faqat "bot" bo‘lsa -> "bot"
+//   botToken: string;
+//   company: Company;
+//   avatar: string | null;
+// };
+type Widget = {
+  id: number;
+  appId: string;
+  url: string;
+  selectedColor: string;
+  icon: string;
+  chatName: string;
+  type: string; // agar faqat "bot" bo‘lsa: "bot"
+  botToken: string;
+};
+
+type UserWidgetData = {
+  id: number;
+  botId: string;
+  firstName: string;
+  lastName: string | null;
+  widget: Widget;
+};
 const Sidebar = () => {
   const searchParams = useSearchParams();
   const appId = searchParams.get("appId");
-  console.log(searchParams.getAll("appId")[0]);
 
   const searchParam = useSearchParams();
   const router = useRouter();
   const id = searchParam.get("chatId");
-  const [user, setUser] = useState<UserType>();
+  // const [user, setUser] = useState<ChatData>();
   const { chatId } = useSelector((state: RootState) => state.chatmessage);
   const [editOpen, setEditOpen] = useState<{
     bool: boolean;
@@ -59,6 +94,18 @@ const Sidebar = () => {
       ),
     staleTime: 60 * 1000,
   });
+  const { data: user } = useQuery<UserWidgetData>({
+    queryKey: ["user"],
+    queryFn: async () => await Myaxios.get("/sub-user/me")
+      .then((res) => {
+        // setUser(res.data);
+        return res.data
+      })
+      .catch(() => {
+        Cookies.remove("access_token");
+        router.push(`/login?appId=${appId}`);
+      })
+  })
 
   useEffect(() => {
     if (counter >= 8 && counter <= 10) {
@@ -80,15 +127,8 @@ const Sidebar = () => {
   }, [id, chatId, refetch]);
 
   useEffect(() => {
-    Myaxios.get("/users/me")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
-        Cookies.remove("access_token");
-        router.push(`/login?appId=${appId}`);
-      });
-  }, [router,appId]);
+
+  }, [router, appId]);
   const editFn = () => {
     Myaxios.patch(`/chats/uid/${editOpen.id}`, { name: editOpen.name }).then(
       (res) => {
@@ -288,24 +328,24 @@ const Sidebar = () => {
         </div>
       </div>
       <div className="flex items-center gap-2 px-4 py-3  cursor-pointer ">
-        { user?.image ? (
+        { false ? (
           <div className="bg-[#fde68a] rounded-lg flex items-center justify-center size-8 ">
-            <Image
-              src={ user.image }
+            {/* <Image
+              src={ user.avatar }
               alt="profile"
               height={ 40 }
               width={ 40 }
               className="rounded-lg"
-            />
+            /> */}
           </div>
         ) : (
           <div className="bg-[#fde68a]  rounded-lg flex items-center justify-center size-8 ">
             <p className=" text-[#ea580b] text-sm font-medium">
-              { user?.name[0] }
+              { user?.firstName?.[0] }
             </p>
           </div>
         ) }
-        <p className="text-[#1d1d1d] font-medium">{ user?.name }</p>
+        <p className="text-[#1d1d1d] font-medium">{ user?.firstName }</p>
 
         <Menubar className="bg-transparent border-none shadow-none p-0 m-0 hover:bg-transparent focus:!bg-transparent ">
           <MenubarMenu>
@@ -327,6 +367,7 @@ const Sidebar = () => {
                 <div
                   onClick={ () => {
                     Cookies.remove("access_token");
+                    Cookies.remove("role");
                     localStorage.removeItem("message");
                     router.push(`/login?appId=${appId}`);
                     dispatch(setMessage(""));
