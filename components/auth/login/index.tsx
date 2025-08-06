@@ -58,7 +58,7 @@ const LoginComponents = () => {
 
     const actualInitDataFromTelegram = tg.initData;
 
-    if (!actualInitDataFromTelegram) {
+    if (!actualInitDataFromTelegram || !appId) {
       toast.error("Telegram initData bo‘sh, qayta yuklanmoqda...");
       // return window.location.reload();
     }
