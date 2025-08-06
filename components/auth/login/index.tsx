@@ -105,6 +105,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 declare global {
   interface Window {
@@ -146,7 +147,7 @@ declare global {
 const LoginComponents = () => {
   const { appId } = useParams();
   const [init, setInit] = useState<string>("");
-  alert(appId)
+  toast.success(appId as string)
   useEffect(() => {
     // Faqat client tarafda va Telegram WebApp mavjud bo‘lsa ishga tushadi
     if (typeof window === "undefined" || !window.Telegram?.WebApp) {
