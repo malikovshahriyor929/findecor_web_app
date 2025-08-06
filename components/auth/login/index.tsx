@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-
+import Cookies from "js-cookie";
 declare global {
   interface Window {
     Telegram: {
@@ -42,35 +42,20 @@ declare global {
 }
 
 const LoginComponents = () => {
-  const pathname = usePathname();
+  const router = useRouter()
   const searchParams = useSearchParams(); // URL query params (e.g., "?id=123")
-
-  // Get full URL (client-side only)
-  const fullUrl = `${window.location.origin}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''
-    }`;
   const appId = searchParams.get("appId")
-  const [init, setInit] = useState<string>("");
-  toast.success(appId)
-  console.log(appId)
   useEffect(() => {
-    // Faqat client tarafda va Telegram WebApp mavjud bo‘lsa ishga tushadi
     if (typeof window === "undefined" || !window.Telegram?.WebApp) {
       console.error("Telegram WebApp mavjud emas.");
       return;
     }
-
     const tg = window.Telegram.WebApp;
     tg.ready();
-
     const actualInitDataFromTelegram = tg.initData;
-
     if (!actualInitDataFromTelegram) {
       toast.error("Telegram initData bo‘sh, qayta yuklanmoqda...");
-      // return window.location.reload();
     }
-
-    setInit(actualInitDataFromTelegram);
-
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/sub-auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -78,12 +63,8 @@ const LoginComponents = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        alert("Backend javobi: " + JSON.stringify(data));
-        if (data.token) alert("token: " + data.token);
-
-        if (data.success) {
-          console.log("Hash muvaffaqiyatli tasdiqlandi!");
-        }
+        Cookies.set("access_token", data.token)
+        router.push(`?appId=${appId}`)
       })
       .catch((error) => {
         console.error("Xatolik:", error);
@@ -95,13 +76,11 @@ const LoginComponents = () => {
           alert(error);
         }
       });
-  }, [appId]);
+  }, [router, appId]);
 
   return (
     <div className="flex items-center justify-center h-screen flex-col gap-3">
-      <pre>{ JSON.stringify(fullUrl, null, 4) }</pre>
-      <pre>{ JSON.stringify(pathname, null, 4) }</pre>
-      <pre>{ JSON.stringify(init, null, 2) }</pre>
+
       <button
         className="bg-red-500 text-white px-4 py-2 rounded"
         onClick={ () => window.location.reload() }

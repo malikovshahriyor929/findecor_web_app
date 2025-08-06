@@ -6,7 +6,7 @@ import { RootState } from "@/store";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import {  useRouter, useSearchParams } from "next/navigation";
 import {
   Menubar,
   MenubarContent,
@@ -88,7 +88,7 @@ const Sidebar = () => {
         Cookies.remove("access_token");
         router.push(`/login?appId=${appId}`);
       });
-  }, [router]);
+  }, [router,appId]);
   const editFn = () => {
     Myaxios.patch(`/chats/uid/${editOpen.id}`, { name: editOpen.name }).then(
       (res) => {

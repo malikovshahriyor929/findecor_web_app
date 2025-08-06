@@ -39,7 +39,7 @@ const Chat_components = () => {
   const dispatch = useDispatch();
   const searchparams = useSearchParams();
   const id = searchparams.get("chatId") || null;
-  const appId = searchparams.get("appId");
+  const appId = searchparams.get("appId") ;
   const router = useRouter();
   const [loadingOfImgLast, setloadingOfImgLast] = useState(false);
   const [hiddenOfAfterImg, sethiddenOfAfterImg] = useState(false);

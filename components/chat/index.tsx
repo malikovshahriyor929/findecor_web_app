@@ -5,7 +5,6 @@ import Filebar from "./filebar";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { toggle, toggleForFilebar } from "@/store/menubarSlice";
-import { useSearchParams } from "next/navigation";
 
 const Chat_componentsLayout = () => {
   const { open, open2 } = useSelector((state: RootState) => state.toogle);
