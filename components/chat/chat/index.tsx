@@ -23,10 +23,8 @@ import toast from "react-hot-toast";
 import { getSocket } from "@/provider/socket";
 import MediaUploadDrawer from "./uploadDrawer";
 import useIsMobile from "@/utils/isMobile";
-interface props {
-  appid: string
-}
-const Chat_components = ({ appid }: props) => {
+
+const Chat_components = () => {
   // const queryClient = useQueryClient();
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
@@ -40,11 +38,12 @@ const Chat_components = ({ appid }: props) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useDispatch();
   const searchparams = useSearchParams();
+  const id = searchparams.get("chatId") || null;
+  const appId = searchparams.get("appId");
   const router = useRouter();
   const [loadingOfImgLast, setloadingOfImgLast] = useState(false);
   const [hiddenOfAfterImg, sethiddenOfAfterImg] = useState(false);
   const isMobile = useIsMobile();
-  const id = searchparams.get("chatId") || null;
   // message push bottom
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -103,7 +102,11 @@ const Chat_components = ({ appid }: props) => {
         const newChatId = res.data.uid;
         setMessages([]);
         localStorage.setItem("message", newMessage);
-        router.push(`/${appid}/?chatId=${newChatId}`);
+        if (appId) {
+          router.push(`/?chatId=${newChatId}&appId=${appId}`);
+        } else {
+          router.push(`/?chatId=${newChatId}`);
+        }
         dispatch(setMessage(newChatId));
         setNewMessage("");
       } catch (err) {
@@ -225,8 +228,8 @@ const Chat_components = ({ appid }: props) => {
         <>
           <div
             className={ ` max-h-fit hidden  fle mx-23 max-[1300px]:mx-20 max-[1268px]:mx-15 max-[1230px]:mx-20 max-[1110px]:mx-10 max-[1000px]:mx-2 max-[925px]:mx-20 max-[780px]:mx-15 max-[735px]:mx-10 max-[690px]:mx-5  rounded-[12px]   items-center gap-3 py-2 overflow-hidden  ${messages[messages?.length - 1]?.options?.length > 0
-                ? "flex"
-                : "hidden"
+              ? "flex"
+              : "hidden"
               } ` }
           >
             { messages.map((value: ChatMessageType, i: number) => {
@@ -249,8 +252,8 @@ const Chat_components = ({ appid }: props) => {
                           <div
                             key={ t + i }
                             className={ `flex-shrink-0 flex items-center gap-2 px-3 py-1 rounded-lg cursor-pointer border transition-all duration-200 min-h-[50px] min-w-[120px]  ${isSelected
-                                ? "border-[#ea580b] bg-orange-100 "
-                                : "border-gray-300 hover:border-gray-500"
+                              ? "border-[#ea580b] bg-orange-100 "
+                              : "border-gray-300 hover:border-gray-500"
                               }` }
                           >
                             { item.hexCode?.trim() !== "" && item.hexCode ? (

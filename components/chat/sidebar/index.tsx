@@ -30,8 +30,9 @@ import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const params = useParams()
-  const appId = params?.appId;
+  const searchParams = useSearchParams();
+  const appId = searchParams.get("appId");
+  console.log(searchParams.getAll("appId")[0]);
 
   const searchParam = useSearchParams();
   const router = useRouter();
@@ -66,13 +67,13 @@ const Sidebar = () => {
   }, [counter, refetch]);
 
   const handle = () => {
-    router.push(`/${appId}`);
+    router.push(`/?appId=${appId}`);
     localStorage.removeItem("message");
     dispatch(setMessage(""));
     refetch();
   };
   const onclickedChat = (id: string) => {
-    router.push(`/${appId}/?chatId=${id}`);
+    router.push(`/?chatId=${id}&appId=${appId}`);
   };
   useEffect(() => {
     refetch();
@@ -85,7 +86,7 @@ const Sidebar = () => {
       })
       .catch(() => {
         Cookies.remove("access_token");
-        router.push(`/${appId}/login`);
+        router.push(`/login?appId=${appId}`);
       });
   }, [router]);
   const editFn = () => {
@@ -110,7 +111,7 @@ const Sidebar = () => {
       <div>
         <div className="flex justify-between items-center px-6  py-5">
           <div>
-            <Link href="/">
+            <Link href={ `/appId=${appId}` }>
               <Image
                 src="/svg/findecor-logo-full-color-rgb 1.svg"
                 height={ 22 }
@@ -327,7 +328,7 @@ const Sidebar = () => {
                   onClick={ () => {
                     Cookies.remove("access_token");
                     localStorage.removeItem("message");
-                    router.push("/login");
+                    router.push(`/login?appId=${appId}`);
                     dispatch(setMessage(""));
                   } }
                   className="flex items-center text-red-500 gap-2 text-sm cursor-pointer"
