@@ -69,11 +69,11 @@ const LoginComponents = () => {
       .catch((error) => {
         console.error("Xatolik:", error);
         if (error.status == 401) {
-          alert("User ma'lumoti yoki initData xato");
+          console.log("User ma'lumoti yoki initData xato");
         } else if (error.status == 404) {
-          alert("App ID xato");
+          console.log("App ID xato");
         } else {
-          alert(error);
+          console.log(error);
         }
       });
   }, [router, appId]);
