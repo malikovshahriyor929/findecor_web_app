@@ -89,7 +89,7 @@ const Sidebar = () => {
   const { data, isLoading, isError, refetch } = useQuery<ChatSelectType[]>({
     queryKey: ["chatselect"],
     queryFn: () =>
-      Myaxios.get("/chats", { params: { sort: "desc" } }).then(
+      Myaxios.get("/subuser/chats", { params: { sort: "desc" } }).then(
         (res) => res.data
       ),
     staleTime: 60 * 1000,
@@ -130,7 +130,7 @@ const Sidebar = () => {
 
   }, [router, appId]);
   const editFn = () => {
-    Myaxios.patch(`/chats/uid/${editOpen.id}`, { name: editOpen.name }).then(
+    Myaxios.patch(`/subuser/chats/uid/${editOpen.id}`, { name: editOpen.name }).then(
       (res) => {
         setEditOpen({ bool: false, id: "", name: "" });
         refetch();
@@ -139,7 +139,7 @@ const Sidebar = () => {
     );
   };
   const deleteFn = async (id: string) => {
-    await Myaxios.delete(`/chats/uid/${id}`).then((res) => {
+    await Myaxios.delete(`/subuser/chats/uid/${id}`).then((res) => {
       refetch();
       handle();
       toast.success(res.data.message);

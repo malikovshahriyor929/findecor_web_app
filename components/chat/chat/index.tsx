@@ -98,7 +98,7 @@ const Chat_components = () => {
     setLoading(true);
     if (!id) {
       try {
-        const res = await Myaxios.post("/chats", { name: "new chat" });
+        const res = await Myaxios.post("/subuser/chats", { name: "new chat" });
         const newChatId = res.data.uid;
         setMessages([]);
         localStorage.setItem("message", newMessage);
@@ -147,13 +147,13 @@ const Chat_components = () => {
     const formData = new FormData();
     formData.append("file", file);
     try {
-      const response = await Myaxios.post("/upload", formData, {
+      const response = await Myaxios.post("/upload/for-sub-user", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const imageUrl = response?.data?.url;
       setUploadImg(imageUrl);
       if (!id) {
-        const res = await Myaxios.post("/chats", { name: "new chat" });
+        const res = await Myaxios.post("/subuser/chats", { name: "new chat" });
         const newChatId = res.data.uid;
         localStorage.setItem("message", newMessage);
         router.push(`/?chatId=${newChatId}`);
