@@ -44,7 +44,10 @@ declare global {
 const LoginComponents = () => {
   const router = useRouter()
   const searchParams = useSearchParams(); // URL query params (e.g., "?id=123")
-  const appId = searchParams.get("appId")
+  const appId = searchParams.get("appId");
+
+
+
   useEffect(() => {
     if (typeof window === "undefined" || !window.Telegram?.WebApp) {
       console.error("Telegram WebApp mavjud emas.");
@@ -53,6 +56,7 @@ const LoginComponents = () => {
     const tg = window.Telegram.WebApp;
     tg.ready();
     const actualInitDataFromTelegram = tg.initData;
+    // "user=%7B%22id%22%3A1910930481%2C%22first_name%22%3A%22Shahriyor%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22Malikov_Shahriyor%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2Fu1yyIL-OgzVaLepKDPzqLB1QEUI8weRpEP3pkHze5f0.svg%22%7D&chat_instance=5994368464737266795&chat_type=private&auth_date=1754465671&signature=rtDnqd1p-o9Kfzct1cFVk3FAoItdxRNOj6igXcjgEEIL10O0PQS8QY1gl2-H02IEWjL3jNp_E3iqGEBCq8N3Aw&hash=1efe547f8e96c83aa688e9f1cd68a0d0de8947c15c70bed12a9e25e08f3adb61"
     if (!actualInitDataFromTelegram) {
       toast.error("Telegram initData bo‘sh, qayta yuklanmoqda...");
     }
@@ -64,7 +68,7 @@ const LoginComponents = () => {
       .then((res) => res.json())
       .then((data) => {
         Cookies.set("access_token", data.token)
-        router.push(`?appId=${appId}`)
+        router.push(`/?appId=${appId}`)
       })
       .catch((error) => {
         console.error("Xatolik:", error);
