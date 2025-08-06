@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 declare global {
@@ -43,6 +43,12 @@ declare global {
 
 const LoginComponents = () => {
   const params = useParams();
+  const pathname = usePathname();
+  const searchParams = useSearchParams(); // URL query params (e.g., "?id=123")
+
+  // Get full URL (client-side only)
+  const fullUrl = `${window.location.origin}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''
+    }`;
   const appId = params.appId
   const [init, setInit] = useState<string>("");
   toast.success(appId as string)
@@ -94,6 +100,8 @@ const LoginComponents = () => {
 
   return (
     <div className="flex items-center justify-center h-screen flex-col gap-3">
+      <pre>{ JSON.stringify(fullUrl, null, 4) }</pre>
+      <pre>{ JSON.stringify(params, null, 4) }</pre>
       <pre>{ JSON.stringify(params, null, 4) }</pre>
       <pre>{ JSON.stringify(init, null, 2) }</pre>
       <button
