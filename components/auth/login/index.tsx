@@ -168,7 +168,6 @@ const LoginComponents = () => {
 
     setInit(actualInitDataFromTelegram);
 
-    // Backendga yuborish
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/sub-auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -195,7 +194,7 @@ const LoginComponents = () => {
           alert(error);
         }
       });
-  }, [appId]);
+  }, [window, appId]);
 
   return (
     <div className="flex items-center justify-center h-screen flex-col gap-3">
