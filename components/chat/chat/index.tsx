@@ -23,9 +23,10 @@ import toast from "react-hot-toast";
 import { getSocket } from "@/provider/socket";
 import MediaUploadDrawer from "./uploadDrawer";
 import useIsMobile from "@/utils/isMobile";
-
+import Cookies from "js-cookie";
 const Chat_components = () => {
   // const queryClient = useQueryClient();
+  const token = Cookies.get("access_token")
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ const Chat_components = () => {
   const dispatch = useDispatch();
   const searchparams = useSearchParams();
   const id = searchparams.get("chatId") || null;
-  const appId = searchparams.get("appId") ;
+  const appId = searchparams.get("appId");
   const router = useRouter();
   const [loadingOfImgLast, setloadingOfImgLast] = useState(false);
   const [hiddenOfAfterImg, sethiddenOfAfterImg] = useState(false);
@@ -202,6 +203,7 @@ const Chat_components = () => {
             <RiMenuFold4Line size={ 25 } className="text-[rgba(10,10,10,0.45)]" />
           </div>
         </div>
+        <p>{ token }</p>
         <div className="flex-1 overflow-y-auto flex flex-col-reverse px-23 max-[1300px]:px-20 max-[1268px]:px-15 max-[1230px]:px-20 max-[1110px]:px-10 max-[1000px]:px-2 max-[925px]:px-20 max-[780px]:px-15 max-[735px]:px-10 max-[690px]:px-5  my-3 py-3 transition-all duration-500 ease-in-out transform">
           <div
             ref={ messagesEndRef }
