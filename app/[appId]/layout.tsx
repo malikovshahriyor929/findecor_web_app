@@ -21,8 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} h-full antialiased`}>
-        <QueryProvider>{children}</QueryProvider>
+      <head>
+        <script async src="https://telegram.org/js/telegram-web-app.js?59"></script>
+      </head>
+      <body className={ `${inter.className} h-full antialiased` }>
+        <QueryProvider>{ children }</QueryProvider>
       </body>
     </html>
   );
