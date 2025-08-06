@@ -68,7 +68,6 @@ type UserWidgetData = {
 const Sidebar = () => {
   const searchParams = useSearchParams();
   const appId = searchParams.get("appId");
-
   const searchParam = useSearchParams();
   const router = useRouter();
   const id = searchParam.get("chatId");
@@ -88,8 +87,8 @@ const Sidebar = () => {
   const { counter } = useSelector((state: RootState) => state.toogle);
   const { data, isLoading, isError, refetch } = useQuery<ChatSelectType[]>({
     queryKey: ["chatselect"],
-    queryFn: () =>
-      Myaxios.get("/subuser/chats", { params: { sort: "desc" } }).then(
+    queryFn: async () =>
+      await Myaxios.get("/subuser/chats", { params: { sort: "desc" } }).then(
         (res) => res.data
       ),
     staleTime: 60 * 1000,
