@@ -1,13 +1,10 @@
 import LoginComponents from "@/components/auth/login";
 import React from "react";
 
-const Login = ({ params }: { params: { appId: string } }) => {
-  const { appId } = params
-  console.log(appId);
-
+const Login = () => {
   return (
     <div>
-      <LoginComponents appId={appId} />
+      <LoginComponents />
     </div>
   );
 };

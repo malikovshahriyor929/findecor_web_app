@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useParams } from "next/navigation";
 declare global {
   interface Window {
     Telegram: {
@@ -37,7 +38,8 @@ declare global {
     };
   }
 }
-const LoginComponents = ({ appId }: { appId: string }) => {
+const LoginComponents = () => {
+  const { appId } = useParams()
   const [init, setinit] = useState("");
 
   useEffect(() => {
