@@ -85,7 +85,7 @@ const Sidebar = () => {
       })
       .catch(() => {
         Cookies.remove("access_token");
-        router.push("/login");
+        router.push(`/${appId}/login`);
       });
   }, [router]);
   const editFn = () => {
