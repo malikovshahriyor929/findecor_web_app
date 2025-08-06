@@ -30,6 +30,7 @@ const ChatsDynamic_component = ({
   sethiddenOfAfterImg,
   setImgDetactSugetion,
   imgDetactSugetion,
+  isAiError
 }: {
   id: string;
   socket: Socket | null;
@@ -42,6 +43,7 @@ const ChatsDynamic_component = ({
   sethiddenOfAfterImg: React.Dispatch<React.SetStateAction<boolean>>;
   setImgDetactSugetion: React.Dispatch<React.SetStateAction<boolean>>;
   imgDetactSugetion: boolean;
+  isAiError: boolean
 }) => {
   const [lastFetchedId, setLastFetchedId] = useState<number | null>(null);
   const refetchForFileBar = useRefetchUploads();
@@ -340,7 +342,7 @@ const ChatsDynamic_component = ({
                   <DotLoading />
                 </div>
               ) }
-              { message.sender.name == "user" && isLast && <DotLoading /> }
+              { !isAiError && message.sender.name == "user" && isLast && <DotLoading /> }
             </div>
           );
         }) }

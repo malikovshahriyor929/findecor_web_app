@@ -26,6 +26,7 @@ import useIsMobile from "@/utils/isMobile";
 import Cookies from "js-cookie";
 const Chat_components = () => {
   // const queryClient = useQueryClient();
+  const [isAiError, setIsAiError] = useState<boolean>(false);
   const token = Cookies.get("access_token")
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
@@ -65,6 +66,7 @@ const Chat_components = () => {
       sethiddenOfAfterImg(false);
       setImgDetactSugetion(false);
       dispatch(setFilebarSearchImage(false));
+      setIsAiError(false)
     };
 
     const onNewMessage = (message: ChatMessageType) => {
@@ -74,6 +76,7 @@ const Chat_components = () => {
       sethiddenOfAfterImg(false);
       setImgDetactSugetion(false);
       dispatch(setFilebarSearchImage(false));
+      setIsAiError(false)
     };
 
     newSocket.on("connected", () => {
@@ -83,7 +86,9 @@ const Chat_components = () => {
     newSocket.on("myMessage", onMyMessage);
     newSocket.on("newMessage", onNewMessage);
     newSocket.on("aiError", (err) => {
+      if (err.success == false) setIsAiError(true)
       console.log(err);
+
     });
 
     return () => {
@@ -97,6 +102,7 @@ const Chat_components = () => {
     if (!newMessage.trim()) return;
     // if (messages[messages?.length - 1]?.sender.name != "ai") return;
     setLoading(true);
+    setIsAiError(false)
     if (!id) {
       try {
         const res = await Myaxios.post("/subuser/chats", { name: "new chat" });
@@ -223,6 +229,7 @@ const Chat_components = () => {
                 sethiddenOfAfterImg={ sethiddenOfAfterImg }
                 setImgDetactSugetion={ setImgDetactSugetion }
                 imgDetactSugetion={ imgDetactSugetion }
+                isAiError={ isAiError }
               />
             ) }
           </div>
