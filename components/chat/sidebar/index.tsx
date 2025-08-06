@@ -6,7 +6,7 @@ import { RootState } from "@/store";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   Menubar,
   MenubarContent,
@@ -30,6 +30,9 @@ import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
+  const params = useParams()
+  const appId = params?.appId;
+
   const searchParam = useSearchParams();
   const router = useRouter();
   const id = searchParam.get("chatId");
@@ -63,13 +66,13 @@ const Sidebar = () => {
   }, [counter, refetch]);
 
   const handle = () => {
-    router.push("/");
+    router.push(`/${appId}`);
     localStorage.removeItem("message");
     dispatch(setMessage(""));
     refetch();
   };
   const onclickedChat = (id: string) => {
-    router.push(`/?chatId=${id}`);
+    router.push(`/${appId}/?chatId=${id}`);
   };
   useEffect(() => {
     refetch();
@@ -110,17 +113,17 @@ const Sidebar = () => {
             <Link href="/">
               <Image
                 src="/svg/findecor-logo-full-color-rgb 1.svg"
-                height={22}
-                width={100}
+                height={ 22 }
+                width={ 100 }
                 alt="logo"
                 priority
               />
             </Link>
           </div>
-          <div onClick={() => handle()} className="cursor-pointer ">
+          <div onClick={ () => handle() } className="cursor-pointer ">
             <Image
-              height={20}
-              width={20}
+              height={ 20 }
+              width={ 20 }
               src="/svg/plus.svg"
               alt=""
               className="max-[1000px]:hidde"
@@ -134,54 +137,52 @@ const Sidebar = () => {
           History
         </p>
         <div className="overflow-hidden ">
-          {!isLoading && !isError && data ? (
+          { !isLoading && !isError && data ? (
             data?.length ? (
               <div
-                className={`py-1 px-4 rounded-lg mt-2 mx-2 flex flex-col gap-3 items-cente h-[calc(100dvh-160px)] overflow-y-auto `}
+                className={ `py-1 px-4 rounded-lg mt-2 mx-2 flex flex-col gap-3 items-cente h-[calc(100dvh-160px)] overflow-y-auto ` }
               >
-                {data.map((value: ChatSelectType, i: number) => (
+                { data.map((value: ChatSelectType, i: number) => (
                   <div
-                    className={`flex items-center gap-1 cursor-pointer hover:bg-[#f7f7f7] w-full ${
-                      id
-                        ? id == value.uid
-                          ? "group flex items-cente justify-between rounded bg-orange-100 hover:bg-orange-200"
-                          : "group flex items-cente justify-between rounded  hover:bg-[#f7f7f7]"
-                        : value.uid == chatId
+                    className={ `flex items-center gap-1 cursor-pointer hover:bg-[#f7f7f7] w-full ${id
+                      ? id == value.uid
                         ? "group flex items-cente justify-between rounded bg-orange-100 hover:bg-orange-200"
                         : "group flex items-cente justify-between rounded  hover:bg-[#f7f7f7]"
-                    }`}
-                    key={i}
+                      : value.uid == chatId
+                        ? "group flex items-cente justify-between rounded bg-orange-100 hover:bg-orange-200"
+                        : "group flex items-cente justify-between rounded  hover:bg-[#f7f7f7]"
+                      }` }
+                    key={ i }
                   >
                     <div
-                      onClick={() => onclickedChat(value.uid)}
-                      className={`flex  items-center  gap-2 flex-1 text-left px- py-1 text-sm font-medium truncate  w-[11rem] max-[1100px]:w-[9rem]  max-[1000px]:w-[8.5rem] line-clamp-1   ${
-                        id
-                          ? id == value.uid
-                            ? " text-orange-800"
-                            : "text-gray-700"
-                          : value.uid == chatId
+                      onClick={ () => onclickedChat(value.uid) }
+                      className={ `flex  items-center  gap-2 flex-1 text-left px- py-1 text-sm font-medium truncate  w-[11rem] max-[1100px]:w-[9rem]  max-[1000px]:w-[8.5rem] line-clamp-1   ${id
+                        ? id == value.uid
                           ? " text-orange-800"
                           : "text-gray-700"
-                      } `}
+                        : value.uid == chatId
+                          ? " text-orange-800"
+                          : "text-gray-700"
+                        } ` }
                     >
-                      {editOpen.bool && editOpen.id == value.uid ? (
+                      { editOpen.bool && editOpen.id == value.uid ? (
                         <div className="flex items-center gap-3 ">
                           <Input
-                            value={editOpen.name}
-                            onChange={(e) =>
+                            value={ editOpen.name }
+                            onChange={ (e) =>
                               setEditOpen({ ...editOpen, name: e.target.value })
                             }
                             className="focus:border-none h-7 w-[100%] "
                           />
                           <div className="flex items-center gap-2">
                             <Check
-                              size={20}
-                              onClick={() => editFn()}
+                              size={ 20 }
+                              onClick={ () => editFn() }
                               className="text-green-500"
                             />
                             <X
-                              size={20}
-                              onClick={() =>
+                              size={ 20 }
+                              onClick={ () =>
                                 setEditOpen({ bool: false, id: "", name: "" })
                               }
                               className="text-red-500"
@@ -190,19 +191,19 @@ const Sidebar = () => {
                         </div>
                       ) : (
                         <div className="flex items-center gap-2 mx-2 ">
-                          <MessageSquare size={16} />
-                          <p className="">{value.name}</p>
+                          <MessageSquare size={ 16 } />
+                          <p className="">{ value.name }</p>
                         </div>
-                      )}
+                      ) }
                     </div>
                     <Menubar className="bg-transparent border-none shadow-none p-0 m-0 hover:bg-transparent focus:!bg-transparent ">
                       <MenubarMenu>
                         <MenubarTrigger
-                          onClick={() => setOpen((prev) => !prev)}
+                          onClick={ () => setOpen((prev) => !prev) }
                           className="focus:bg-transparent z-[887]  focus:text-accent-foreground data-[state=open]:bg-transparent  data-[state=open]:text-transparent flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none "
                         >
                           <div className="p-1 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 focus:opacity-100  max-[450px]:opacity-100 ">
-                            <EllipsisVertical size={16} />
+                            <EllipsisVertical size={ 16 } />
                           </div>
                         </MenubarTrigger>
                         {/* <MenubarContent>
@@ -229,49 +230,49 @@ const Sidebar = () => {
                             </div>
                           </div>
                         </MenubarContent> */}
-                        {open && (
+                        { open && (
                           <MenubarContent
-                            onInteractOutside={() => setOpen(false)} // close when clicking outside
+                            onInteractOutside={ () => setOpen(false) } // close when clicking outside
                             className="z-50"
                           >
                             <div className="flex flex-col gap-2 p-2">
                               <div
-                                onClick={() => {
+                                onClick={ () => {
                                   setEditOpen({
                                     bool: true,
                                     id: value.uid,
                                     name: value.name,
                                   });
                                   setOpen(false);
-                                }}
+                                } }
                                 className="flex items-center gap-2 text-sm cursor-pointer"
                               >
-                                <Pen size={16} />
+                                <Pen size={ 16 } />
                                 Rename
                               </div>
                               <div
-                                onClick={() => {
+                                onClick={ () => {
                                   deleteFn(value.uid);
                                   setOpen(false);
-                                }}
+                                } }
                                 className="flex items-center gap-2 text-sm text-red-500 cursor-pointer"
                               >
-                                <Trash2 size={16} />
+                                <Trash2 size={ 16 } />
                                 Delete
                               </div>
                             </div>
                           </MenubarContent>
-                        )}
+                        ) }
                       </MenubarMenu>
                     </Menubar>
                   </div>
-                ))}
+                )) }
               </div>
             ) : (
               <div className="bg-[#f7f7f7] p-5 rounded-lg mt-2 mx-2 flex flex-col gap-3 items-center   ">
                 <Image
-                  height={24}
-                  width={24}
+                  height={ 24 }
+                  width={ 24 }
                   src="/svg/list-unordered.svg"
                   alt="menu"
                 />
@@ -282,28 +283,28 @@ const Sidebar = () => {
             )
           ) : (
             <SkeletonForSideBar />
-          )}
+          ) }
         </div>
       </div>
       <div className="flex items-center gap-2 px-4 py-3  cursor-pointer ">
-        {user?.image ? (
+        { user?.image ? (
           <div className="bg-[#fde68a] rounded-lg flex items-center justify-center size-8 ">
             <Image
-              src={user.image}
+              src={ user.image }
               alt="profile"
-              height={40}
-              width={40}
+              height={ 40 }
+              width={ 40 }
               className="rounded-lg"
             />
           </div>
         ) : (
           <div className="bg-[#fde68a]  rounded-lg flex items-center justify-center size-8 ">
             <p className=" text-[#ea580b] text-sm font-medium">
-              {user?.name[0]}
+              { user?.name[0] }
             </p>
           </div>
-        )}
-        <p className="text-[#1d1d1d] font-medium">{user?.name}</p>
+        ) }
+        <p className="text-[#1d1d1d] font-medium">{ user?.name }</p>
 
         <Menubar className="bg-transparent border-none shadow-none p-0 m-0 hover:bg-transparent focus:!bg-transparent ">
           <MenubarMenu>
@@ -313,8 +314,8 @@ const Sidebar = () => {
             >
               <div className="relative z- ">
                 <Image
-                  height={14}
-                  width={14}
+                  height={ 14 }
+                  width={ 14 }
                   src="/svg/arrowSideBarBottom.svg"
                   alt="btn"
                 />
@@ -323,15 +324,15 @@ const Sidebar = () => {
             <MenubarContent className="z-50">
               <div className="flex flex-col gap-2 p-2">
                 <div
-                  onClick={() => {
+                  onClick={ () => {
                     Cookies.remove("access_token");
                     localStorage.removeItem("message");
                     router.push("/login");
                     dispatch(setMessage(""));
-                  }}
+                  } }
                   className="flex items-center text-red-500 gap-2 text-sm cursor-pointer"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={ 16 } />
                   Log out
                 </div>
               </div>
