@@ -50,8 +50,8 @@ const LoginComponents = () => {
     }`;
   const appId = searchParams.get("appId")
   const [init, setInit] = useState<string>("");
-  toast.success(appId as string)
-  console.log("params:", useParams())
+  toast.success(appId)
+  console.log(appId)
   useEffect(() => {
     // Faqat client tarafda va Telegram WebApp mavjud bo‘lsa ishga tushadi
     if (typeof window === "undefined" || !window.Telegram?.WebApp) {
@@ -64,7 +64,7 @@ const LoginComponents = () => {
 
     const actualInitDataFromTelegram = tg.initData;
 
-    if (!actualInitDataFromTelegram || !appId) {
+    if (!actualInitDataFromTelegram) {
       toast.error("Telegram initData bo‘sh, qayta yuklanmoqda...");
       // return window.location.reload();
     }
