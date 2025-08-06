@@ -146,7 +146,7 @@ declare global {
 const LoginComponents = () => {
   const { appId } = useParams();
   const [init, setInit] = useState<string>("");
-
+  alert(appId)
   useEffect(() => {
     // Faqat client tarafda va Telegram WebApp mavjud bo‘lsa ishga tushadi
     if (typeof window === "undefined" || !window.Telegram?.WebApp) {
