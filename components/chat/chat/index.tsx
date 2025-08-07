@@ -209,7 +209,7 @@ const Chat_components = () => {
             <RiMenuFold4Line size={ 25 } className="text-[rgba(10,10,10,0.45)]" />
           </div>
         </div>
-        <p>{ token }</p>
+        
         <div className="flex-1 overflow-y-auto flex flex-col-reverse px-23 max-[1300px]:px-20 max-[1268px]:px-15 max-[1230px]:px-20 max-[1110px]:px-10 max-[1000px]:px-2 max-[925px]:px-20 max-[780px]:px-15 max-[735px]:px-10 max-[690px]:px-5  my-3 py-3 transition-all duration-500 ease-in-out transform">
           <div
             ref={ messagesEndRef }
