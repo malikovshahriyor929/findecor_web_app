@@ -83,7 +83,9 @@ const LoginComponents = () => {
 
   return (
     <div className="flex items-center justify-center h-screen flex-col gap-3">
-      <pre>{ JSON.stringify(appId, null, 4) }</pre>
+      {/* changed */}
+      <pre>{ JSON.stringify(appId, null, 4) }</pre> 
+      {/*  */}
       <div className="absolute top-0 left-0 size-full flex items-center justify-center  ">
         <Loader2 className=" animate-spin " size={ 30 } />
       </div>
